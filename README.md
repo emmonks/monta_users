@@ -1,4 +1,4 @@
-# monta_users.py
+# monta_users
 Script em Pyhton 3 para gerar username a partir de nomes completos, com tratamento de conflitos. O script trata os conflitos de nomes de usuários iguais, usando o formato "nome.sobrenome". Não são usadas
 bibliotecas fora do padrão da instalação do Python3.
 
