@@ -42,16 +42,16 @@ def f_remove_accents(old):
     return new
 
 
-
 parser = argparse.ArgumentParser(prog='monta_users', description='Gera nome de usuarios (nome.sobrenome), com a saida para uso com o comando newusers do Linux',  epilog='Versao 1 - 2024')
 parser.add_argument('-a', '--arquivo', required=True, type=str, help='Nome do Arquivo')
 parser.add_argument('-s', '--senha', required=False, default=12, type=int, help='Define o tamanho da senha')
+parser.add_argument('-e', '--estatisticas', required=False, default=1, type=int, help='Gera estatisticas- 0 desativa e 1 ativa')
 args = parser.parse_args()
-
 
 
 arquivo=args.arquivo
 tamsenha=int(args.senha)
+estatisticas=int(args.estatisticas)
 
 # Abre o arquivo com o nome completo dos usuarios
 
@@ -94,7 +94,7 @@ for row in reader:
              usuarios.append(username)
              completo.append(cont[0].title())
              tentativa1=tentativa1+1
-             print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash" )
+             print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
         else:
 # 2a tentativa: se houver mais de um sobrenome, primeiro_nome.nome_do_meio
             if qelemento >= 3:
@@ -102,7 +102,7 @@ for row in reader:
                 username=f_remove_accents(username)
                 
                 if username not in usuarios and elemento[0].lower() != elemento[-2].lower():
-                   print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash" )
+                   print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
                    usuarios.append(username)
                    completo.append(cont[0].title())
                    tentativa2=tentativa2+1
@@ -111,7 +111,7 @@ for row in reader:
                     username = elemento[0].lower() + "." + elemento[-3].lower()
                     username=f_remove_accents(username)
                     if username not in usuarios and elemento[0].lower() != elemento[-3].lower():
-                        print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash" )
+                        print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
                         usuarios.append(username)
                         completo.append(cont[0].title()) 
                         tentativa3=tentativa3+1
@@ -124,18 +124,20 @@ for row in reader:
 if conflito_flag == 1:
     print ("#######################")
     print ("#" + str(conflito_count) + " conflito(s) detectado(s)!")
+    print ("#######################")
     # Salva os usuarios em conflito no arquivo confitos.csv
     write_to_csv(conflitos)
 
-total=tentativa1 + tentativa2 + tentativa3 + conflito_count
-print ("#########################")
-print ("Estatisticas")
-print ("#########################")
-print ("Total de linhas: " + str(linhas) )
-print ("Total processado: " + str(total) )
-print ("1a tentativa: " + str(tentativa1) + " -  " + "%.2f" % ((tentativa1/total)*100)  + "%")
-print ("2a tentativa: " + str(tentativa2) + " -  " + "%.2f" % ((tentativa2/total)*100)  + "%")
-print ("3a tentativa: " + str(tentativa3) + " -  " + "%.2f" % ((tentativa3/total)*100)  + "%")
-print ("Conflitos: " + str(conflito_count) + " -  " + "%.2f" % ((conflito_count/total)*100)  + "%")
+if estatisticas == 1:
+    total=tentativa1 + tentativa2 + tentativa3 + conflito_count
+    print ("#########################")
+    print ("Estatisticas")
+    print ("#########################")
+    print ("Total de linhas: " + str(linhas) )
+    print ("Total processado: " + str(total) )
+    print ("1a tentativa: " + str(tentativa1) + " -  " + "%.2f" % ((tentativa1/total)*100)  + "%")
+    print ("2a tentativa: " + str(tentativa2) + " -  " + "%.2f" % ((tentativa2/total)*100)  + "%")
+    print ("3a tentativa: " + str(tentativa3) + " -  " + "%.2f" % ((tentativa3/total)*100)  + "%")
+    print ("Conflitos: " + str(conflito_count) + " -  " + "%.2f" % ((conflito_count/total)*100)  + "%")
 
 
