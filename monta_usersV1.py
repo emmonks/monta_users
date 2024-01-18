@@ -46,12 +46,14 @@ parser = argparse.ArgumentParser(prog='monta_users', description='Gera nome de u
 parser.add_argument('-a', '--arquivo', required=True, type=str, help='Nome do Arquivo')
 parser.add_argument('-s', '--senha', required=False, default=12, type=int, help='Define o tamanho da senha')
 parser.add_argument('-e', '--estatisticas', required=False, default=1, type=int, help='Gera estatisticas- 0 desativa e 1 ativa')
+parser.add_argument('-o', '--saida', required=False, default=1, type=int, choices=range(0,2), help='Formato da saida - 1 para uso com newusers e 0 - para saida em CSV')
 args = parser.parse_args()
 
 
 arquivo=args.arquivo
 tamsenha=int(args.senha)
 estatisticas=int(args.estatisticas)
+saida=int(args.saida)
 
 # Abre o arquivo com o nome completo dos usuarios
 
@@ -94,7 +96,10 @@ for row in reader:
              usuarios.append(username)
              completo.append(cont[0].title())
              tentativa1=tentativa1+1
-             print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
+             if saida == 1:
+                 print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
+             if saida == 0: 
+                 print (username + ";" + generate_password(tamsenha,listasenha) + ";" + cont[0].title().rstrip())
         else:
 # 2a tentativa: se houver mais de um sobrenome, primeiro_nome.nome_do_meio
             if qelemento >= 3:
@@ -102,7 +107,10 @@ for row in reader:
                 username=f_remove_accents(username)
                 
                 if username not in usuarios and elemento[0].lower() != elemento[-2].lower():
-                   print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
+                   if saida == 1:
+                       print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
+                   if saida == 0:
+                      print (username + ";" + generate_password(tamsenha,listasenha) + ";" + cont[0].title().rstrip())
                    usuarios.append(username)
                    completo.append(cont[0].title())
                    tentativa2=tentativa2+1
@@ -111,10 +119,13 @@ for row in reader:
                     username = elemento[0].lower() + "." + elemento[-3].lower()
                     username=f_remove_accents(username)
                     if username not in usuarios and elemento[0].lower() != elemento[-3].lower():
-                        print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
-                        usuarios.append(username)
-                        completo.append(cont[0].title()) 
-                        tentativa3=tentativa3+1
+                       if saida == 1:
+                           print (username + ":" + generate_password(tamsenha,listasenha) + ":::" + cont[0].title().rstrip() + ":/home/" + username + ":/bin/bash")
+                       if saida == 0:
+                           print (username + ";" + generate_password(tamsenha,listasenha) + ";" + cont[0].title().rstrip())
+                       usuarios.append(username)
+                       completo.append(cont[0].title()) 
+                       tentativa3=tentativa3+1
 # Caso nao seja possivel nenhuma das tentativas, considera conflito
         if cont[0].title() not in completo:
             conflitos.append(username + ";" + cont[0].title().rstrip())
