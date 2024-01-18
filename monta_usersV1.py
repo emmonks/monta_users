@@ -5,11 +5,14 @@
 # Arquivo de entrada devera conter o nome completo do usuario
 # Formato da saida para uso com o comando newusers do Linux
 # professor15:senac2010:::Professor 15:/home/professor15:/bin/bash
+
+ 
 import csv
 import sys
 import random
 import string
 import re
+import argparse
 
 # Gera senha aleatorias
 def generate_password(length, data):
@@ -40,19 +43,21 @@ def f_remove_accents(old):
 
 
 
-if len(sys.argv) != 3:
-	print ("Uso: monta_users <tamanho da senha> <arquivo com os nomes>")
-	print ("Versao 1 - 2024")
-	sys.exit()
-	
-arquivo=sys.argv[2]
-tamsenha=int(sys.argv[1])
+parser = argparse.ArgumentParser(prog='monta_users', description='Gera nome de usuarios (nome.sobrenome), com a saida para uso com o comando newusers do Linux',  epilog='Versao 1 - 2024')
+parser.add_argument('-a', '--arquivo', required=True, type=str, help='Nome do Arquivo')
+parser.add_argument('-s', '--senha', required=False, default=12, type=int, help='Define o tamanho da senha')
+args = parser.parse_args()
+
+
+
+arquivo=args.arquivo
+tamsenha=int(args.senha)
 
 # Abre o arquivo com o nome completo dos usuarios
 
 try:
-        reader = csv.reader(open(arquivo, "r"), delimiter=';')
-except:
+        reader = csv.reader(open(arquivo, "r", encoding='utf-8'), delimiter=';')
+except FileNotFoundError:
         print ("Erro na abertura do arquivo: " + arquivo)
         sys.exit()
 
