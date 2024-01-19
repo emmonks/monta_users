@@ -44,7 +44,7 @@ def f_remove_accents(old):
     return new
 
 
-parser = argparse.ArgumentParser(prog='monta_users', description='Gera nome de usuarios (nome.sobrenome), com a saida para uso com o comando newusers do Linux',  epilog='Versao 1 - 2024')
+parser = argparse.ArgumentParser(prog='monta_users', description='Gera nome de usuarios (nome.sobrenome), com a saida para uso com o comando newusers do Linux',  epilog='Versao 2 - 2024')
 parser.add_argument('-a', '--arquivo', required=True, type=str, help='Nome do Arquivo')
 parser.add_argument('-s', '--senha', required=False, default=12, type=int, help='Define o tamanho da senha')
 parser.add_argument('-e', '--estatisticas', required=False, default=1, type=int, choices=range(0,2), help='Gera estatisticas- 0 desativa e 1 ativa')
